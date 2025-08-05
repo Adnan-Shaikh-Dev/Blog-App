@@ -44,6 +44,7 @@ const generateUsername = async (email) => {
 };
 
 server.post("/signup", (req, res) => {
+  // console.log("Request gotten");
   let { fullname, email, password } = req.body;
   //validating frontend data
   if (fullname.length < 3) {
@@ -89,7 +90,7 @@ server.post("/signup", (req, res) => {
 });
 
 server.post("/signin", (req, res) => {
-  let { email, password } = req.body;
+  const { email, password } = req.body;
 
   User.findOne({ "personal_info.email": email })
     .then((user) => {
@@ -100,24 +101,25 @@ server.post("/signin", (req, res) => {
       bcrypt.compare(password, user.personal_info.password, (err, result) => {
         if (err) {
           return res
-            .status(403)
-            .json({ error: "Error occured while login please try again" });
+            .status(500)
+            .json({
+              error: "Error occurred while logging in, please try again.",
+            });
         }
 
         if (!result) {
-          return res.status(403).json({ error: "Incorrect Password" });
-        } else {
-          return res.status(200).json(formatDatatoSend(user));
+          return res.status(403).json({ error: "Incorrect password" });
         }
+
+        return res.status(200).json(formatDatatoSend(user));
       });
-      console.log(user);
-      return res.json({ status: "Got User Document" });
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       return res.status(500).json({ error: err.message });
     });
 });
+
 server.listen(PORT, () => {
   console.log("listening on port ->" + PORT);
 });
