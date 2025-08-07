@@ -38,8 +38,19 @@ mongoose.connect(process.env.DB_LOCATION, { autoIndex: true });
 const s3 = new aws.S3({
   region: "us-east-1",
   accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESsS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
+
+const generateUploadUrl = async () => {
+  const date = new Date();
+  const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
+  return await s3.getSignedUrlPromise("putObject", {
+    Bucket: "myblogappbucket090103",
+    Key: imageName,
+    Expires: 1000,
+    ContentType: "image/jpeg",
+  });
+};
 
 const formatDatatoSend = (user) => {
   const access_token = jwt.sign(
@@ -63,6 +74,16 @@ const generateUsername = async (email) => {
   isUsernameNotUnique ? (username += nanoid().substring(0, 5)) : "";
   return username;
 };
+
+//Uploading image url route
+server.get("/get-upload-url", (req, res) => {
+  generateUploadUrl()
+    .then((url) => res.status(200).json({ uploadURL: url }))
+    .catch((err) => {
+      console.log(err.message);
+      return res.status(500).json({ error: err.message });
+    });
+});
 
 server.post("/signup", (req, res) => {
   // console.log("Request gotten");
