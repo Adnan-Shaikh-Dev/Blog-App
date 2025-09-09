@@ -30,6 +30,7 @@ const BlogEditor = () => {
     setBlog,
     textEditor,
     setTextEditor,
+    setEditorState,
   } = useContext(EditorContext);
   const handleBannerUpload = (e) => {
     // console.log(e);
@@ -86,9 +87,17 @@ const BlogEditor = () => {
     }
 
     if (textEditor.isReady) {
-      textEditor.save().then((data) => {
-        console.log(data);
-      });
+      textEditor
+        .save()
+        .then((data) => {
+          if (data.blocks.length) {
+            setBlog({ ...blog, content: data });
+            setEditorState("publish");
+          } else {
+            return toast.error("Cannot publish an empty blog");
+          }
+        })
+        .catch((err) => console.log(err));
     }
   };
 

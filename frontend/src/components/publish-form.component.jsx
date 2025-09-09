@@ -1,5 +1,7 @@
+import AnimationWrapper from "../common/page-animation";
+
 const PublishForm = () => {
-  return <h1>Publish Form from Component JSX File</h1>;
+  return <AnimationWrapper></AnimationWrapper>;
 };
 
 export default PublishForm;
