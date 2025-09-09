@@ -36,7 +36,7 @@ mongoose.connect(process.env.DB_LOCATION, { autoIndex: true });
 
 // setup of s3 bucket
 const s3 = new aws.S3({
-  region: "us-east-1",
+  region: "ap-south-1",
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
@@ -45,7 +45,7 @@ const generateUploadUrl = async () => {
   const date = new Date();
   const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
   return await s3.getSignedUrlPromise("putObject", {
-    Bucket: "myblogappbucket090103",
+    Bucket: "my-blogging-website-bucket",
     Key: imageName,
     Expires: 1000,
     ContentType: "image/jpeg",
