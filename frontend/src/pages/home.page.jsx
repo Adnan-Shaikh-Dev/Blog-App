@@ -3,6 +3,7 @@ import InPageNavigation from '../components/inpage-navigation.component'
 import AnimationWrapper from '../common/page-animation'
 import axios from 'axios';
 import Loader from '../components/loader.component'
+import BlogPostCard from '../components/blog-post.component';
 const Homepage = () => {
     let [blogs, setBlog] = useState(null) 
     const fetchLatestBlogs = () =>{
@@ -28,7 +29,9 @@ const Homepage = () => {
                     {
                         blogs === null ? <Loader/> :
                        Array.isArray(blogs)&& blogs.map((blog,i)=>{
-                        return <h1 key={i}>{blog.title}</h1>
+                        return <AnimationWrapper key={i} transition={{duration:1, delay:i*.1}}>
+                            <BlogPostCard content={blog} author={blog.author.personal_info}/>
+                        </AnimationWrapper>
                     })
                     }
                     </>
