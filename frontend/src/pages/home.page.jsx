@@ -9,6 +9,7 @@ import {
   activeTabLineRef,
   activeTabRef,
 } from "../components/inpage-navigation.component";
+import NoDataMessage from "../components/nodata.component";
 const Homepage = () => {
   let [blogs, setBlog] = useState(null);
   let [trendingBlogs, setTrendingBlogs] = useState(null);
@@ -92,8 +93,7 @@ const Homepage = () => {
             <>
               {blogs === null ? (
                 <Loader />
-              ) : (
-                Array.isArray(blogs) &&
+              ) : Array.isArray(blogs) && blogs.length ? (
                 blogs.map((blog, i) => {
                   return (
                     <AnimationWrapper
@@ -107,6 +107,10 @@ const Homepage = () => {
                     </AnimationWrapper>
                   );
                 })
+              ) : (
+                <NoDataMessage
+                  message={`No Blog with ${pageState} tag published`}
+                />
               )}
             </>
 
