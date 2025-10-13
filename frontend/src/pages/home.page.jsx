@@ -45,6 +45,19 @@ const Homepage = () => {
       });
   };
 
+  const fetchBlogsByCategory = async () => {
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
+        tag: pageState,
+      })
+      .then(({ data }) => {
+        setBlog(data.blogs);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const loadBlogByCategory = (e) => {
     console.log("click");
     let category = e.target.innerText.toLowerCase();
@@ -60,6 +73,8 @@ const Homepage = () => {
     activeTabRef.current.click();
     if (pageState == "home") {
       fetchLatestBlogs();
+    } else {
+      fetchBlogsByCategory();
     }
     if (!trendingBlogs) {
       fetchTrendingBlogs();
