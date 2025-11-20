@@ -10,8 +10,10 @@ import {
   activeTabRef,
 } from "../components/inpage-navigation.component";
 import NoDataMessage from "../components/nodata.component";
+import filterPaginationData from "../common/filter-pagination-data";
 const Homepage = () => {
   let [blogs, setBlog] = useState(null);
+
   let [trendingBlogs, setTrendingBlogs] = useState(null);
   let [pageState, setPageState] = useState("home");
 
@@ -25,11 +27,18 @@ const Homepage = () => {
     "finances",
     "travel",
   ];
-  const fetchLatestBlogs = () => {
+  const fetchLatestBlogs = (page = 1) => {
     axios
-      .get(import.meta.env.VITE_SERVER_DOMAIN + "/latest-blogs")
-      .then(({ data }) => {
-        setBlog(data.blogs);
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/latest-blogs", { page })
+      .then(async ({ data }) => {
+        let formatData = await filterPaginationData({
+          state: blogs,
+          data: data.blogs,
+          page,
+          countRoute: "/all-latest-blogs-count",
+        });
+        console.log(formatData);
+        setBlog(formatData);
       })
       .catch((err) => {
         console.log(err);
@@ -93,8 +102,8 @@ const Homepage = () => {
             <>
               {blogs === null ? (
                 <Loader />
-              ) : Array.isArray(blogs) && blogs.length ? (
-                blogs.map((blog, i) => {
+              ) : Array.isArray(blogs.results) && blogs.results.length ? (
+                blogs.results.map((blog, i) => {
                   return (
                     <AnimationWrapper
                       key={i}
