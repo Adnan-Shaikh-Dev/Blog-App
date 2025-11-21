@@ -1,21 +1,20 @@
-import React from "react";
 import axios from "axios";
 
-const filterPaginationData = async ({
+export const filterPaginationData = async ({
   create_new_arr = false,
   state,
   data,
   page,
   countRoute,
-  data_to_send,
+  data_to_send = {},
 }) => {
   let obj;
 
-  if (state !== null && !create_new_arr) {
-    obj = { ...state, results: [...state.results, ...data], page };
+  if (state != null && !create_new_arr) {
+    obj = { ...state, results: [...state.results, ...data], page: page };
   } else {
     await axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + countRoute, data_to_send)
+      .post(import.meta.env.VITE_SERVER_DOMAIN + countRoute, { data_to_send })
       .then(({ data: { totalDocs } }) => {
         obj = { results: data, page: 1, totalDocs };
       })
@@ -26,5 +25,3 @@ const filterPaginationData = async ({
 
   return obj;
 };
-
-export default filterPaginationData;
