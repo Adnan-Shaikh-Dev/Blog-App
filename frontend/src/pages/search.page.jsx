@@ -13,6 +13,15 @@ import { filterPaginationData } from "../common/filter-pagination-data";
 const SearchPage = () => {
   let { query } = useParams();
   let [blogs, setBlogs] = useState(null);
+  let [users, setUsers] = useState(null);
+
+  const fetchUsers = () => {
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", { query })
+      .then(({ data: { users } }) => {
+        setUsers(users);
+      });
+  };
 
   const searchBlogs = ({ page = 1, create_new_arr = false }) => {
     axios
@@ -36,11 +45,14 @@ const SearchPage = () => {
 
   const resetState = () => {
     setBlogs(null);
-    searchBlogs({ page: 1, create_new_arr: true });
+    setUsers(null);
   };
 
   useEffect(() => {
     resetState();
+    searchBlogs({ page: 1, create_new_arr: true });
+
+    fetchUsers();
   }, [query]);
   return (
     <section className="h-cover flex justify-center gap-10">
