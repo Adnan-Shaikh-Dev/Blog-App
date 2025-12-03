@@ -13,7 +13,6 @@ const InPageNavigation = ({
   activeTabLineRef = useRef();
   activeTabRef = useRef();
   const changePageState = (btn, i) => {
-    console.log(btn, i);
     let { offsetWidth, offsetLeft } = btn;
     activeTabLineRef.current.style.width = offsetWidth + "px";
     activeTabLineRef.current.style.left = offsetLeft + "px";
