@@ -10,6 +10,8 @@ import axios from "axios";
 
 import { filterPaginationData } from "../common/filter-pagination-data";
 
+import UserCard from "../components/usercard.component";
+
 const SearchPage = () => {
   let { query } = useParams();
   let [blogs, setBlogs] = useState(null);
@@ -17,7 +19,7 @@ const SearchPage = () => {
 
   const fetchUsers = () => {
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", { query })
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-users", { query })
       .then(({ data: { users } }) => {
         setUsers(users);
       });
@@ -54,16 +56,37 @@ const SearchPage = () => {
 
     fetchUsers();
   }, [query]);
+
+  const UserCardWrapper = () => {
+    return (
+      <>
+        {users == null ? (
+          <Loader />
+        ) : users.length ? (
+          users.map((user, i) => {
+            return (
+              <AnimationWrapper
+                key={i}
+                transition={{ duration: 1, delay: i * 0.08 }}
+              >
+                <UserCard user={user} />
+              </AnimationWrapper>
+            );
+          })
+        ) : (
+          <NoDataMessage message="No User Found" />
+        )}
+      </>
+    );
+  };
   return (
     <section className="h-cover flex justify-center gap-10">
       <div className="w-full">
         <InPageNavigation
           routes={[`Search Results from "${query}"`, "Accounts Matched"]}
           defaultHidden={["Accounts Matched"]}
-        />
-
-        <>
-          {
+        >
+          <>
             <>
               {blogs === null ? (
                 <Loader />
@@ -86,8 +109,15 @@ const SearchPage = () => {
               )}
               <LoadMoreDataBtn state={blogs} fetchDataFun={searchBlogs} />
             </>
-          }
-        </>
+          </>
+          <UserCardWrapper />
+        </InPageNavigation>
+      </div>
+      <div className="min-w-[40%] lg:min-w-[350px] max-w-min border-l border-grey pl-8 pt-3 max-md:hidden">
+        <h1 className="font-medium text-xl mb-8">
+          Users related to search <i className="fi fi-rr-user mt-1"></i>
+        </h1>
+        <UserCardWrapper />
       </div>
     </section>
   );
