@@ -4,6 +4,7 @@ import AnimationWrapper from "../common/page-animation";
 import axios from "axios";
 import Loader from "../components/loader.component";
 import BlogPostCard from "../components/blog-post.component";
+import NoDataMessage from "../components/nodata.component";
 import MinimalBlogPost from "../components/nobanner-blog-post.component";
 import { filterPaginationData } from "../common/filter-pagination-data";
 import {
