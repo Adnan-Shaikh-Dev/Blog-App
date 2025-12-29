@@ -5,6 +5,7 @@ import AnimationWrapper from '../common/page-animation'
 import Loader from '../components/loader.component'
 import UserCard from '../components/usercard.component'
 import { UserContext } from '../App'
+import AboutUser from '../components/about.component'
 
 
 export const profileDataStructure = {
@@ -74,6 +75,7 @@ social_links, joinedAt} = profile;
                         <Link to="/setting/edit-profile " className='btn-light rounded-md'>Edit Profile</Link>:""
                     }
                     </div>
+                    <AboutUser bio={bio} social_links={social_links} joinedAt={joinedAt} className="max-md:hidden"/>
                 </div>
             </section>
         }
